@@ -5,6 +5,16 @@ use Illuminate\Support\Facades\Route;
 use App\Model\Post;
 use App\User;
 //Eloquent Relationships
+Route::get('user/{id}/role', function($id){
+   /*  $user = User::find($id);
+    foreach($user->roles as $role){
+        echo "User Name ".$user->name ." is ".$role->name;
+        //echo $role->name;
+
+    }*/
+    $user =User::find($id)->roles->orderBy('id', 'desc')->get();
+    return $user;
+});
 Route::get('posts', function(){//one to many relationship
     $user= User::find(1);
     foreach($user->posts as $post){
