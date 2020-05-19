@@ -1,15 +1,21 @@
 <?php
 
-use App\Model\Post;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Model\Post;
 use App\User;
 //Eloquent Relationships
+Route::get('post/{id}/user', function($id){//reverse one to one
+    //return Post::find($id)->user->name;
+    $u=Post::find($id)->user;
+   return "name ".$u->name ." email ".$u->email ." date time ".$u->created_at;
+});
 Route::get('user/{id}/post', function($id){//one to one
     return User::find($id)->post->title;
-    // return User::find($id)->post;
+    //return User::find($id)->post;
     //return User::find($id)->post->content;
 });
+
 //Eloquent Database ORM
 Route::get('basicinsert', function(){
     $post =new Post;
@@ -56,7 +62,7 @@ Route::get('findmore', function(){
 Route::get('updateeloquent', function(){
     Post::where('id', 3)->where('title', 'the create mass assignment')
     ->update(['content'=>'This is updated from Eloquent1',
-    'title'=> 'the create mass assignment Eloquent1']);
+    'title'=> 'the create mass assignment Eloquent1'])  ;
 });
 Route::get('deleteeloquent', function(){
     $post=Post::find(4);
