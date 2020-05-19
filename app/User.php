@@ -36,4 +36,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    public function post(){
+        return $this->hasOne('App\Model\Post');
+        //it will look for user_id by default
+    }
 }

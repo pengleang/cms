@@ -3,7 +3,13 @@
 use App\Model\Post;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-
+use App\User;
+//Eloquent Relationships
+Route::get('user/{id}/post', function($id){//one to one
+    return User::find($id)->post->title;
+    // return User::find($id)->post;
+    //return User::find($id)->post->content;
+});
 //Eloquent Database ORM
 Route::get('basicinsert', function(){
     $post =new Post;
