@@ -40,4 +40,7 @@ class User extends Authenticatable
         return $this->hasOne('App\Model\Post');
         //it will look for user_id by default
     }
+    public function posts(){
+        return $this->hasMany('App\Model\Post');
+    }
 }

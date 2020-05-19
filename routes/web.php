@@ -5,6 +5,12 @@ use Illuminate\Support\Facades\Route;
 use App\Model\Post;
 use App\User;
 //Eloquent Relationships
+Route::get('posts', function(){//one to many relationship
+    $user= User::find(1);
+    foreach($user->posts as $post){
+        echo $post->title  . $post->content ."<br>";
+    }
+});
 Route::get('post/{id}/user', function($id){//reverse one to one
     //return Post::find($id)->user->name;
     $u=Post::find($id)->user;
