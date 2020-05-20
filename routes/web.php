@@ -5,6 +5,27 @@ use Illuminate\Support\Facades\Route;
 use App\Model\Post;
 use App\User;
 use App\Country;
+use App\Photo;
+use App\Tag;
+
+//Polymorpic Many to Many
+Route::get('tag/post', function () {
+    $tag=Tag::find(2);
+    foreach($tag->posts as $post){
+        echo $post->title;
+    }
+});
+Route::get('post/tag', function () {
+    $post = Post::find(1);
+    foreach($post->tags as $tag){
+        echo $tag->name;
+    }
+});
+//Polymorphic Relation, the reverse
+Route::get('photo/{id}/post', function ($id) {
+$photo = Photo::findOrFail($id);
+return $photo->imageable;
+});
 //Polymorphic Relation
 Route::get('user/photos', function(){
     $user =User::find(1);
