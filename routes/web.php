@@ -4,16 +4,42 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Model\Post;
 use App\User;
+use App\Country;
+//Polymorphic Relation
+Route::get('user/photos', function(){
+    $user =User::find(1);
+    foreach($user->photos as $photo){
+        echo $photo->path;//return $photo;
+    }
+});
+Route::get('post/photos', function(){
+    $post =Post::find(1);
+    foreach($post->photos as $photo){
+        echo $photo->path ."<br>";//return $photo;
+    }
+});
+//Has Many Through Relationship
+Route::get('user/country', function(){
+    $country = Country::find(2);
+    foreach($country->posts as $post){
+        echo $post->title;
+    }
+});
+//Accessing intermediate table/ pivot
+Route::get('user/pivot', function(){
+    $user =User::find(1);
+    foreach($user->roles as $role){
+        echo $role->pivot->created_at;
+        //echo $role->pivot;
+    }
+});
 //Eloquent Relationships
 Route::get('user/{id}/role', function($id){
-   /*  $user = User::find($id);
+    $user = User::find($id);
     foreach($user->roles as $role){
         echo "User Name ".$user->name ." is ".$role->name;
         //echo $role->name;
-
-    }*/
-    $user =User::find($id)->roles->orderBy('id', 'desc')->get();
-    return $user;
+    }
 });
 Route::get('posts', function(){//one to many relationship
     $user= User::find(1);
