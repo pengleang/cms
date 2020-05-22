@@ -7,7 +7,112 @@ use App\User;
 use App\Country;
 use App\Photo;
 use App\Tag;
+use App\Address;
+use App\Role;
 
+//Many to Many CRUD
+Route::get('sync', function () {//attach role to use
+    $user = User::findOrFail(1);
+    $user->roles()->sync([1,2,3]);
+});
+Route::get('detach', function () { //delete all attach
+     $user = User::findOrFail(2);
+     //$user->roles()->detach(3);
+     $user->roles()->detach(); // unattach all
+});
+Route::get('attach', function () {//attach roles to create role_user table
+    $user = User::findOrFail(2);
+    $user->roles()->attach(2);
+});
+Route::get('deletemtm', function () {
+    $user =User::findOrFail(1);
+    foreach($user->roles as $role){
+        $role->whereId(4)->delete(); //softdelete if using
+        //$role->whereId(4)->forceDelete();//drop record if using
+        //$role->delete(); delete all records if using
+        echo 'delete is done';
+    }
+});
+Route::get('updatemtm', function () {
+$user =User::findOrFail(1);
+if($user->has('roles')){
+    foreach($user->roles as $role){
+        if($role->name =='suppervisor'){
+            $role->name='manager';
+            $role->save();
+            echo 'update is done';
+        }
+    }
+}
+});
+Route::get('readmtm', function () {
+    $user = User::findOrFail(1);
+    foreach($user->roles as $role){
+        echo $user->name .$role->name;
+    //dd($role); dd($user->roles);
+}
+});
+Route::get('createmtm', function () {
+    $user = User::find(2);
+    $role = new Role(['name'=>'Analysis']);
+    $user->roles()->save($role);
+    echo 'data is inserted';
+});
+//One to Many CRUD
+Route::get('deleteonetomany', function () {
+    $user = User::find(1);
+    //$user->posts()->whereId(7)->delete(); //softdelete
+    $user->posts()->whereId(7)->forceDelete();//drop record
+    //$user->posts()->delete(); delete all records
+    echo 'delete is done with forceDelete()';
+});
+Route::get('updateonetomany', function () {
+    $user = User::find(1);
+    $user->posts()->whereId(7)->update(['title'=>'update one to many with ID 7',
+                            'content'=>'content one to many update with ID 7']);
+    echo 'Update is done';
+});
+Route::get('readonetomany', function () {
+    $user = User::findOrFail(1);
+    foreach($user->posts as $post){
+        echo $post->title ."<br>";
+    }
+    //echo $user->posts;//will returns all object as array
+    // echo $user->post; //will returns one row object as array
+});
+Route::get('createonetomany', function () {
+    $user = User::findOrFail(1);
+    $post =new Post(['title'=>'One to Many', 'content'=>'Insert to One to Many']);
+    $user->posts()->save($post);
+    echo 'one to many is inserted the data';
+});
+//One to One CRUD
+Route::get('deleteonetoone', function () {
+    //$user = User::findOrFail(1);
+    //$user->address()->delete();
+    $user = Address::findOrFail(3);
+    $user->delete();
+    echo 'delete is done with user id';
+});
+Route::get('readonetoone', function(){
+    $user = User::findOrFail(1);
+    echo $user->address->name;
+});
+Route::get('updateonetoone', function () {
+    //$address = Address::whereUserId(1)->first();//return first match object of UserId
+    //$address = Address::where('id', 2)->first();//use address id
+    $address = Address::where('id','=', 2)->first();//use address id
+    $address->name='Address 2 is updated now';
+    $address->update();//$address->save();
+    echo "updated done";
+});
+Route::get('insertonetoone', function(){
+    $user= User::findOrFail(1);
+    //$address = new Address(['name'=>'one to one CRUD insert data']);
+    $address = new Address(['name'=>'one to one second time']);
+    $user->address()->save($address);
+    echo "data is inserted";
+});
 //Polymorpic Many to Many
 Route::get('tag/post', function () {
     $tag=Tag::find(2);
