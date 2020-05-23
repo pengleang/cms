@@ -9,7 +9,48 @@ use App\Photo;
 use App\Tag;
 use App\Address;
 use App\Role;
+use App\Staff;
 
+//polymorphic Many to Many relationship
+
+//polymorphic relationship
+Route::get('unassignpolymtm', function () {
+    $staff = Staff::findOrFail(1);
+    $staff->photos()->whereId(9)->update(['imageable_id'=>'0','imageable_type'=>'']);
+    echo 'blank the imageable_id and imageable_type in photos table';
+});
+Route::get('assignpolymtm', function () {
+    $staff =Staff::findOrFail(2);
+    $photo =Photo::findOrFail(10);
+    $staff->photos()->save($photo);
+    echo 'assignpolymtm is done';
+});
+Route::get('deletepolymtm', function () {
+    $staff = Staff::findOrFail(1);
+    //$staff->photos()->delete();
+    //$staff->photos()->whereId(4)->delete();
+    //$staff->photos()->wherePath('example.jpg')->delete();
+    //$staff->photos()->where('Path','example.jpg')->delete();
+    $staff->photos()->where('Path','=','example.jpg')->delete();
+    echo 'delete is done';
+});
+Route::get('updatepolymtm', function () {
+    $staff = Staff::findOrFail(1);
+    $photo=$staff->photos()->whereId(4)->first();
+    $photo->path='update example.jpg';
+    $photo->save(); //or $photo->update();
+    echo 'update is done';
+});
+Route::get('readpolymtm', function () {
+    $staff = Staff::findOrFail(1);
+    foreach($staff->photos as $photo){
+        echo $photo->path;
+    }
+});
+Route::get('createpolymtm', function () {
+    $staff =Staff::find(1);
+    $staff->photos()->create(['path'=>'example.jpg']);
+});
 //Many to Many CRUD
 Route::get('sync', function () {//attach role to use
     $user = User::findOrFail(1);
