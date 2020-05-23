@@ -6,14 +6,46 @@ use App\Model\Post;
 use App\User;
 use App\Country;
 use App\Photo;
-use App\Tag;
 use App\Address;
 use App\Role;
 use App\Staff;
+use App\Tag;
+use App\Video;
 
-//polymorphic Many to Many relationship
+//polymorphic Many to Many relationship CRUD
+Route::get('readpmm', function () {
+    $post =Post::findOrFail(1);
+    foreach($post->tags as $tag){
+        echo $tag->name;
+    }
+});
+Route::get('updatepmm', function () {
+    $post =Post::findOrFail(1);
+    foreach($post->tags() as $tag){
+        $tag->whereId(2)->update(['name'=>'update name']);
+        //$tag->whereName('php')->update(['name'=>'update name']);
+    }
+    $ta =Tag::find(2);
+    //$post->tags()->save($ta);
+    //$post->tags()->attach($ta);
+    $post->tags()->sync(['1,2']);
+});
+Route::get('deletepmm', function () {
+    $post =Post::find(1);
+    foreach($post->tags as $tag){
+    $tag->whereId(3)->delete();
+}
+});
+Route::get('createpmm', function () {
+$post =Post::create(['user_id'=>2, 'title'=>'Create Poly N-N', 'content'=>'This is Poly NN content']);
+$tagP=Tag::find(1);
+$post->tags()->save($tagP); echo 'P and T is done';
 
-//polymorphic relationship
+$video =Video::create(['name'=>'VideoPolyNN.mov']);
+$tagV = Tag::find(2);
+$video->tags()->save($tagV); echo 'V and T is done';
+});
+//polymorphic relationship CRUD
 Route::get('unassignpolymtm', function () {
     $staff = Staff::findOrFail(1);
     $staff->photos()->whereId(9)->update(['imageable_id'=>'0','imageable_type'=>'']);
