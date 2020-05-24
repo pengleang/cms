@@ -11,31 +11,61 @@ use App\Role;
 use App\Staff;
 use App\Tag;
 use App\Video;
-
+use Carbon\Carbon;
+//more model manipulation 
+//scope
+Route::get('scopeController', 'PostController@index');
+//Mutator
+Route::get('setname', function () {
+    $user =User::find(1);
+    $user->name='Mr.leang';
+    $user->save();
+});
+//Accessor
+Route::get('getnameandemail', function () {
+    $user = User::find(1);
+    echo $user->name .'<br>'. $user->email;
+});
+//Carbon
+Route::get('dates', function () {
+    $date = new DateTime('now');//+1 week
+    echo $date->format('d-m-y');
+    echo '<br>';
+    echo Carbon::now()->format('d-m-y');
+    echo '<br>';
+    echo Carbon::now()->subMonth()->diffForHumans();
+    echo '<br>';
+    echo Carbon::now()->addMonth()->diffForHumans();
+    echo '<br>';
+    echo Carbon::now()->nextWeekday()->diffForHumans();
+});
 //polymorphic Many to Many relationship CRUD
+Route::get('deletepmm', function () {
+    $post =Post::find(8);
+    foreach($post->tags as $tag){
+     $tag->whereId(1)->delete();
+    }
+});
+Route::get('updatepmm', function () {
+    $post =Post::findOrFail(1);
+    foreach($post->tags as $tag){
+        $tag->whereId(2)->update(['name'=>'update name in tags table with ID 2']);
+       $tag->whereName('php')->update(['name'=>'update name']);
+    }
+    //$ta =Tag::find(2);
+    //$post->tags()->save($ta); //insert into taggable table
+    //$post->tags()->attach($ta);//insert into taggable table
+    //$post->tags()->sync(['5']);
+});
+
 Route::get('readpmm', function () {
     $post =Post::findOrFail(1);
     foreach($post->tags as $tag){
         echo $tag->name;
     }
 });
-Route::get('updatepmm', function () {
-    $post =Post::findOrFail(1);
-    foreach($post->tags() as $tag){
-        $tag->whereId(2)->update(['name'=>'update name']);
-        //$tag->whereName('php')->update(['name'=>'update name']);
-    }
-    $ta =Tag::find(2);
-    //$post->tags()->save($ta);
-    //$post->tags()->attach($ta);
-    $post->tags()->sync(['1,2']);
-});
-Route::get('deletepmm', function () {
-    $post =Post::find(1);
-    foreach($post->tags as $tag){
-    $tag->whereId(3)->delete();
-}
-});
+
+
 Route::get('createpmm', function () {
 $post =Post::create(['user_id'=>2, 'title'=>'Create Poly N-N', 'content'=>'This is Poly NN content']);
 $tagP=Tag::find(1);

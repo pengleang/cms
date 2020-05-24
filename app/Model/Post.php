@@ -19,5 +19,7 @@ class Post extends Model
     public function photos(){
         return $this->morphMany('App\Photo', 'imageable');
     }
-
+    public  function scopeLatest($query){
+        return $query->orderBy('id', 'asc')->get();
+    }
 }
