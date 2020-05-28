@@ -12,6 +12,10 @@ use App\Staff;
 use App\Tag;
 use App\Video;
 use Carbon\Carbon;
+//disqus
+Route::get('showcomment', function () {
+return view('commentofdisqus');
+});
 //WYSIWYG
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], function () {//allow all web
   //'middleware' => ['web', 'auth']], function () { all web but need to login as multi-users
