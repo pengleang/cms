@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Model\Post;
 use Illuminate\Http\Request;
-
+use Storage;
+use File;
 class PostController extends Controller
 {
     /**
@@ -83,5 +84,13 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+    public function copyImage(Request $request){
+        Storage::copy('exsit/test.jpg', 'copy/testcopy.jpg');
+        dd('copy file dont');
+    }
+    public function copyImage1(Request $request){
+        File::copy(public_path('exist/test.jpg'), public_path('copy/testcopy.jpg'));
+        dd('copy file dont');
     }
 }

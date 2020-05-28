@@ -12,7 +12,19 @@ use App\Staff;
 use App\Tag;
 use App\Video;
 use Carbon\Carbon;
-//more model manipulation 
+//WYSIWYG
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web']], function () {//allow all web
+  //'middleware' => ['web', 'auth']], function () { all web but need to login as multi-users
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+Route::get('editor', function () {
+return view('showeditor');
+});
+//LaravelCollective
+Route::get('LaravelCollective', function () {
+return view('testColective');
+});
+//more model manipulation
 //scope
 Route::get('scopeController', 'PostController@index');
 //Mutator
