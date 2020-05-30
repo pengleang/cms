@@ -12,6 +12,18 @@ use App\Staff;
 use App\Tag;
 use App\Video;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
+//mailgun
+Route::get('sendemail', function () {
+$data = [ 'title'=>'When are you coming back?',
+          'content'=>'This is the mailgun content'];
+Mail::send('emails.mailgun', $data, function ($message) {
+    $message->from('pengleang@sabaytraining.com', 'Pengleang SabayTraining');
+    $message->to('lypengleang@gmail.com', 'Lypengleang Seang');
+    $message->subject('Hello are you?');
+    echo 'Hello, How are you?';
+});
+});
 //disqus
 Route::get('showcomment', function () {
 return view('commentofdisqus');
